@@ -3,6 +3,8 @@ import { Title } from '../../components/title/Title'
 import React, {useState} from 'react';
 import { Book } from '../../components/book/Book';
 import { FormAdd } from '../formAdd/FormAdd';
+import { FormUp } from '../formUp/FormUp';
+
 
 
 const BooksPage: React.FC = () => {
@@ -12,7 +14,9 @@ const BooksPage: React.FC = () => {
         {id:3, title: "le monde des animaux", author: "Marc Merlin", nb: 250},
         {id:4, title: "le virus d'asie", author: "tya Milo", nb: 120}
     ])
+    const [lastIdBook, setLastIdBook] = useState(4)
     const [isAdd, setIsAdd] = useState<boolean>(false);
+    const [idBookUpdate, setIdBookUpdate] = useState(0)
 
     const handleDelete = (id: number) => {
         const newBooks = [...books];
@@ -26,9 +30,24 @@ const BooksPage: React.FC = () => {
         
     }
 
+    const handleAddBook = ( title: any , author: any ) => {
+
+        setLastIdBook(lastIdBook => lastIdBook++)
+        const id = lastIdBook + 1;
+        const nBook = {id:id, title: title, author: author, nb: 120}
+
+        const newBook = {...nBook};
+     
+        books.push(newBook)
+        console.log(books);  
+        
+        setIsAdd(false)
+    }
+
+
     return (  
     <>
-        {!isAdd && 
+        {!isAdd ?
         <>
             <Title title="Pages listant les livres"/>
             <table className="table text-center">
@@ -42,17 +61,23 @@ const BooksPage: React.FC = () => {
                 </thead>
                 <tbody>
                     {books.map(book => {
-                        return (
-                            <tr key={book.id}>
-                                <Book book={book} handleSup={() => handleDelete(book.id)}/>
-                            </tr>
-                        )
+                        if(book.id !== idBookUpdate){
+                            return (
+                                <tr key={book.id}>
+                                    <Book book={book} handleSupBook={() => handleDelete(book.id)} update={() => setIdBookUpdate(book.id)}  />
+                                </tr>
+                            )
+                        } else {
+                            return (
+                                <FormUp/>
+                            )
+                        }
                     })}
                 </tbody>
             </table>
         </>
-        ||
-        <FormAdd/>
+        :
+        <FormAdd books={books} handleAddBook={handleAddBook}/>
         }
 
         <Button text={!isAdd ? "ajouter" : "fermet l'ajout"} btnCss="btn btn-success" propscss="w-100" clic={handleChange}/>

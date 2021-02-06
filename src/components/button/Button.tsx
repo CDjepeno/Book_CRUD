@@ -3,7 +3,7 @@ import React from 'react'
 type Props = {
     text: string;
     btnCss: string;
-    clic: any;
+    clic?: any;
     propscss?: string;
 }
 

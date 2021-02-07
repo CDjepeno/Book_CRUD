@@ -2,8 +2,9 @@ import { Button } from '../../components/button/Button'
 import { Title } from '../../components/title/Title'
 import React, {useState} from 'react';
 import { Book } from '../../components/book/Book';
-import { FormAdd } from '../formAdd/FormAdd';
+import  FormAdd  from '../formAdd/FormAdd';
 import { FormUp } from '../formUp/FormUp';
+import { Alert } from '../../components/alert/alert';
 
 
 
@@ -17,12 +18,15 @@ const BooksPage: React.FC = () => {
     const [lastIdBook, setLastIdBook] = useState(4)
     const [isAdd, setIsAdd] = useState<boolean>(false);
     const [idBookUpdate, setIdBookUpdate] = useState(0)
+    const [alert, setAlert] = useState("");
 
     const handleDelete = (id: number) => {
         const newBooks = [...books];
         // console.log('je vais te sup');
         
-        setBooks(newBooks.filter(book => book.id !== id))        
+        setBooks(newBooks.filter(book => book.id !== id))     
+        
+        setAlert('Suppression effectuée')
     }
 
     const handleChange = () => {
@@ -30,26 +34,47 @@ const BooksPage: React.FC = () => {
         
     }
 
-    const handleAddBook = ( title: any , author: any ) => {
+    const handleAddBook = ( title: string , author: string, nb: number ) => {
 
         setLastIdBook(lastIdBook => lastIdBook++)
         const id = lastIdBook + 1;
-        const nBook = {id:id, title: title, author: author, nb: 120}
+        const nBook = {id:id, title: title, author: author, nb: nb}
 
         const newBook = {...nBook};
      
         books.push(newBook)
-        console.log(books);  
         
         setIsAdd(false)
+
+        setAlert('Ajout effectuée')
     }
 
+    const handleUpBook = (title: string, author: string, nb: number, id: number) => {
+
+        const newBook = {id, title, nb, author}
+
+        const book = books.findIndex(b => b.id === id );
+        
+        const newBooks = {...books};
+        
+        newBooks[book] = newBook; 
+
+        setIdBookUpdate(0);
+
+        setIsAdd(true);
+
+        setAlert('Modification effectuée')
+
+        
+    }
 
     return (  
     <>
         {!isAdd ?
         <>
             <Title title="Pages listant les livres"/>
+            {alert && <Alert text={alert} />}
+            
             <table className="table text-center">
                 <thead>
                     <tr className="table-dark">
@@ -64,12 +89,14 @@ const BooksPage: React.FC = () => {
                         if(book.id !== idBookUpdate){
                             return (
                                 <tr key={book.id}>
-                                    <Book book={book} handleSupBook={() => handleDelete(book.id)} update={() => setIdBookUpdate(book.id)}  />
+                                    <Book book={book} handleSupBook={() => handleDelete(book.id)} update={() => setIdBookUpdate(book.id)}   />
                                 </tr>
                             )
                         } else {
                             return (
-                                <FormUp/>
+                                <tr key={book.id}>
+                                    <FormUp title={book.title} author={book.author} nb={book.nb} handleUpBook={handleUpBook} id={book.id} />
+                                </tr>
                             )
                         }
                     })}
@@ -77,7 +104,7 @@ const BooksPage: React.FC = () => {
             </table>
         </>
         :
-        <FormAdd books={books} handleAddBook={handleAddBook}/>
+        <FormAdd handleAddBook={handleAddBook}/>
         }
 
         <Button text={!isAdd ? "ajouter" : "fermet l'ajout"} btnCss="btn btn-success" propscss="w-100" clic={handleChange}/>
@@ -87,3 +114,4 @@ const BooksPage: React.FC = () => {
 }
  
 export default BooksPage;
+

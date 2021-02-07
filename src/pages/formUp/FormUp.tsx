@@ -3,16 +3,20 @@ import { Button } from '../../components/button/Button';
 import { Field } from '../../components/forms/field';
 import {useState} from 'react';
 
-// type Props = {
-//     books: Object
-//     handleUpBook: any
-// }
+type Props = {
+    handleUpBook: any;
+    title: string;
+    author: string;
+    nb: number;
+    id: number;
+    
+}
 
-export const FormUp: React.FC = () => {
+export const FormUp: React.FC<Props> = ({  handleUpBook, title, author, nb, id }) => {
     const [form, setForm] = useState({
-        title:"",
-        author:"",
-        nb:"",
+        title: title,
+        author: author,
+        nb: nb,
     })
     const [error, setError] = useState("");
     
@@ -23,18 +27,16 @@ export const FormUp: React.FC = () => {
         setForm({...form, [name]: value});
     } 
 
-    const handleFormValidation = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        // console.log(form);
+    
 
-        // handleUpBook(form.title, form.author, form.nb);
-        
+    const handleFormValidation = () => {
+
+        handleUpBook(form.title, form.author, form.nb, id); 
     }
 
     return (
-        <div>
-            <p>livre</p>
-            {/* <td>
+        <>
+            <td>
                 <Field
                     name="title"
                     value={form.title}
@@ -45,7 +47,7 @@ export const FormUp: React.FC = () => {
             <td>
                 <Field
                     name="author"
-                    value={form.title}
+                    value={form.author}
                     onChange={handleChangeInput}
                     error={error}
                 />
@@ -53,17 +55,17 @@ export const FormUp: React.FC = () => {
             <td>
                 <Field
                     name="nb"
-                    value={form.title}
+                    value={form.nb}
                     onChange={handleChangeInput}
                     error={error}
                 />
             </td>
-
-
             <td>
                 <Button text="valider" btnCss="btn btn-primary mr-4" clic={handleFormValidation}/>
-            </td> */}
-        </div>
+            </td>
+        </>
+        
+        
     )
 }
 

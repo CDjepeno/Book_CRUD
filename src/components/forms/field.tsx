@@ -6,10 +6,11 @@ type Props = {
     value: any;
     onChange: any;
     type?: string;
-    error: any;
+    error?: any;
+    onBlur?: any;
 }
 
-export const Field: React.FC<Props> = ({ name, label, value, onChange, type, error="" }) => {
+export const Field: React.FC<Props> = ({ name, label, value, onBlur, onChange, type, error="" }) => {
     return (
         <div className="form-group">
             <label htmlFor={name}>{label}</label>
@@ -17,6 +18,7 @@ export const Field: React.FC<Props> = ({ name, label, value, onChange, type, err
                 name={name}
                 type={type}
                 onChange={onChange}
+                onBlur={onBlur}
                 value={value}
                 className={"form-control" + (error && " is-invalid")}
                 id={name}

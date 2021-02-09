@@ -5,5 +5,6 @@
 
 - Projet CRUD
 - Sécurisation formulaire Formik et Yup.
+- Utilisation des hooks.
 
 
